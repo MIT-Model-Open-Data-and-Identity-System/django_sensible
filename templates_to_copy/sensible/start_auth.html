@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if status == 'error' %}
+<div class="alert alert-error">
+	<button type="button" class="close" data-dismiss="alert">&times;</button>
+	<strong>Error</strong> {{ message }}
+</div>
+{% endif %}
+
+	<div class="page-header">
+		<h1>Please allow this application to submit your data first.</h1>
+	</div>
+
+	<p><a class="btn btn-success btn-large" href="{% url 'authorize' %}">Allow <i class="icon-chevron-right icon-white"></i></a></p>
+
+{% endblock %}
