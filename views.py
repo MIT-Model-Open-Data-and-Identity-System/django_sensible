@@ -7,13 +7,13 @@ def quit(request):
 	return redirect(settings.SERVICE_URL+'quit')
 
 def logout_success(request):
-	return render_to_response('logout_success.html', {}, context_instance=RequestContext(request))
+	return render_to_response('sensible/logout_success.html', {}, context_instance=RequestContext(request))
 
 def noscript(request):
-	return render_to_response('js_disabled.html', {}, context_instance=RequestContext(request))
+	return render_to_response('sensible/js_disabled.html', {}, context_instance=RequestContext(request))
 
 def openid_failed(request):
-	return render_to_response('openid_failed.html', {}, context_instance=RequestContext(request))
+	return render_to_response('sensible/openid_failed.html', {}, context_instance=RequestContext(request))
 
 def changebrowser(request):
-	return render_to_response('changebrowser.html', {}, context_instance=RequestContext(request))
+	return render_to_response('sensible/changebrowser.html', {}, context_instance=RequestContext(request))
