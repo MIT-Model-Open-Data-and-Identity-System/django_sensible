@@ -25,15 +25,18 @@ def authorize(request):
 			if request.user == user:
 				session.delete()
 	except: pass
-
-	return redirect(settings.SENSIBLE_URL+'oauth2/authorize_refreshed/')
+	
+	params = request.GET
+	scopes = ','.join([x.replace('scope_', '') for x in params if params[x] == 'checked'])
+	return redirect(settings.SENSIBLE_URL+'oauth2/authorize_refreshed/?scope=%s'%scopes)
 
 @login_required
 def authorizeRefreshedUser(request):
 	state = generateState(request.user)
 	url = settings.SERVICE_URL + settings.AUTH_ENDPOINT + settings.CONNECTOR
 	url += '/auth/grant/?'
-	url += 'scope='+','.join([s.scope for s in Scope.objects.filter(type=Type.objects.get(type='data'))])
+	scope = request.GET.get('scope', '')
+	url += 'scope='+scope
 	url += '&client_id='+SECURE_CONFIG.CLIENT_ID
 	url += "&response_type=code"
 	url += '&state='+state
@@ -53,14 +56,14 @@ def grant(request):
 		return redirect(settings.ROOT_URL+'quit/&status=auth_error')
 	token = exchangeCodeForToken(request, SECURE_CONFIG.CLIENT_ID, SECURE_CONFIG.CLIENT_SECRET, redirect_uri=settings.SERVICE_MY_REDIRECT, request_uri=settings.SERVICE_TOKEN_URL)
 	if 'error' in token:
-				r = redirect('form')
+				r = redirect('home')
 				r['Location'] += '?status=error&message='+token['error']
 				return r
 
 	if saveToken(request.user, token):
 		return redirect('home')
 	else:
-		r = redirect('form')
+		r = redirect('home')
 		r['Location'] += '?status=error&message=something went wrong in the process (code 5784)'
 		return r
 
